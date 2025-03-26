@@ -1,103 +1,298 @@
-import Image from "next/image";
+"use client";
+import { useState } from "react";
 
-export default function Home() {
+export default function Page() {
+  // Estado para el formulario (agregamos "unidad" con valor por defecto "años")
+  const [mascota, setMascota] = useState({
+    nombre: "",
+    raza: "",
+    edad: "",
+    unidad: "años", // <-- Nuevo campo para manejar si son meses o años
+    duenio: "",
+    notas: "",
+  });
+
+  // Estado para almacenar TODAS las mascotas registradas
+  const [listaMascotas, setListaMascotas] = useState([]);
+
+  // Maneja cambios en cada campo del formulario
+  const handleChange = (e) => {
+    setMascota({
+      ...mascota,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  // Maneja el envío del formulario
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Agrega la nueva mascota al array
+    setListaMascotas([...listaMascotas, mascota]);
+    // Limpia el formulario
+    setMascota({
+      nombre: "",
+      raza: "",
+      edad: "",
+      unidad: "años", // Reiniciamos la unidad al valor por defecto
+      duenio: "",
+      notas: "",
+    });
+  };
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div
+      style={{
+        minHeight: "100vh",
+        backgroundColor: "#f0f0f0",
+        padding: "2rem",
+      }}
+    >
+      {/* Contenedor principal del formulario */}
+      <div
+        style={{
+          maxWidth: "600px",
+          margin: "0 auto",
+          backgroundColor: "#fff",
+          borderRadius: "8px",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          padding: "2rem",
+          color: "#000",
+        }}
+      >
+        <h1
+          style={{
+            textAlign: "center",
+            marginBottom: "1.5rem",
+            color: "#000",
+            fontSize: "2rem", // Aumenta este valor para un título más grande
+          }}
+        >
+          Registro de Mascota
+        </h1>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+        {/* Formulario */}
+        <form
+          onSubmit={handleSubmit}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "1rem",
+          }}
+        >
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+                color: "#000",
+              }}
+            >
+              Nombre de la Mascota:
+            </label>
+            <input
+              type="text"
+              name="nombre"
+              value={mascota.nombre}
+              onChange={handleChange}
+              placeholder="Ej. Firulais"
+              required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Raza:
+            </label>
+            <input
+              type="text"
+              name="raza"
+              value={mascota.raza}
+              onChange={handleChange}
+              placeholder="Ej. Labrador"
+              required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
+
+          {/* Edad con select para indicar si son meses o años */}
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Edad:
+            </label>
+            <div style={{ display: "flex", gap: "0.5rem" }}>
+              <input
+                type="number"
+                name="edad"
+                value={mascota.edad}
+                onChange={handleChange}
+                placeholder="Ej. 3"
+                required
+                style={{
+                  width: "100px",
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
+              />
+              <select
+                name="unidad"
+                value={mascota.unidad}
+                onChange={handleChange}
+                style={{
+                  padding: "0.5rem",
+                  borderRadius: "4px",
+                  border: "1px solid #ccc",
+                }}
+              >
+                <option value="meses">Meses</option>
+                <option value="años">Años</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Nombre del Dueño:
+            </label>
+            <input
+              type="text"
+              name="duenio"
+              value={mascota.duenio}
+              onChange={handleChange}
+              placeholder="Ej. Juan Pérez"
+              required
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+              }}
+            />
+          </div>
+
+          <div>
+            <label
+              style={{
+                display: "block",
+                marginBottom: "0.5rem",
+                fontWeight: "bold",
+              }}
+            >
+              Notas Adicionales:
+            </label>
+            <textarea
+              name="notas"
+              value={mascota.notas}
+              onChange={handleChange}
+              placeholder="Observaciones..."
+              style={{
+                width: "100%",
+                padding: "0.5rem",
+                borderRadius: "4px",
+                border: "1px solid #ccc",
+                minHeight: "80px",
+              }}
+            ></textarea>
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              backgroundColor: "#0070f3",
+              color: "#fff",
+              padding: "0.75rem 1rem",
+              border: "none",
+              borderRadius: "4px",
+              cursor: "pointer",
+              fontSize: "1rem",
+            }}
           >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+            Registrar Mascota
+          </button>
+        </form>
+      </div>
+
+      {/* Contenedor de la lista de mascotas */}
+      <div
+        style={{
+          maxWidth: "600px",
+          margin: "2rem auto 0 auto",
+          color: "#000",
+        }}
+      >
+        <h2
+          style={{
+            textAlign: "center",
+            marginBottom: "1.5rem",
+            color: "#000",
+            fontSize: "2rem", // Aumenta este valor para un título más grande
+          }}
         >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+          Mascotas Registradas
+        </h2>
+        {listaMascotas.length === 0 ? (
+          <p>No hay mascotas registradas.</p>
+        ) : (
+          listaMascotas.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                backgroundColor: "#fff",
+                borderRadius: "8px",
+                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                padding: "1rem",
+                marginBottom: "1rem",
+              }}
+            >
+              <p>
+                <strong>Nombre:</strong> {item.nombre}
+              </p>
+              <p>
+                <strong>Raza:</strong> {item.raza}
+              </p>
+              <p>
+                <strong>Edad:</strong> {item.edad} {item.unidad}
+              </p>
+              <p>
+                <strong>Dueño:</strong> {item.duenio}
+              </p>
+              <p>
+                <strong>Notas:</strong> {item.notas}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 }
